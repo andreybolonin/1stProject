@@ -46,8 +46,8 @@ class User implements UserInterface, \Serializable
     private $status;
 
     /**
-     * @ORM\Column(type="phone_number")
-     * @AssertPhoneNumber(defaultRegion="UA")
+     * @ORM\Column(type="string")
+     * @Assert\Regex(pattern="/^\+38\(0\)[0-9]{9}$/", message="Введите 9 цифр номера телефона без +380")
      * @Assert\NotBlank()
      */
     private $phone = null;
@@ -73,7 +73,7 @@ class User implements UserInterface, \Serializable
 //    private $biddings;
 
     /**
-     * @ORM\Column(type="string" length=255)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      */
     private $company;
@@ -91,47 +91,49 @@ class User implements UserInterface, \Serializable
     private $regNumber;
 
     /**
-     * @return mixed
+     * @return null|string
      */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->email;
     }
 
     /**
-     * @return mixed
+     * @return null|string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @param string|null $name
+     *
      */
-    public function setName($name)
+    public function setName(?string $name)
     {
         $this->name = $name;
     }
 
     /**
-     * @return mixed
+     * @return null|string
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
     /**
-     * @param mixed $email
+     * @param string|null $email
+     * @return User
      */
-    public function setEmail($email)
+    public function setEmail($email): User
     {
         $this->email = $email;
     }
 
     /**
-     * @return mixed
+     * @return null|string
      */
     public function getRoles()
     {
@@ -139,9 +141,10 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @param mixed $role
+     * @param string|null $role
+     * @return User
      */
-    public function setRole($role)
+    public function setRole($role): User
     {
         $this->role = $role;
     }
