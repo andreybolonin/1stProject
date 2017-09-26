@@ -4,30 +4,36 @@ security:
         my_db_provider:
             entity:
                 class: AppBundle:User
-                property: username
+                property: email
 
 
     encoders:
-        AppBundle\Entity\User: bcrypt
+        AppBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 13
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_SELLER, ROLE_BUYER]
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
-            pattern: ^/
+        secured_area:
+            pattern: ^/(admin|cabinet)
             anonymous: ~
             provider: my_db_provider
             simple_form:
-                login_path: /login
-                check_path: /login_check
+                login_path: /admin/login
+                check_path: /admin/login_check
                 authenticator: AppBundle\Security\PasswordAuthenticator
             logout:
-                path: /logout
-                target: /login
+                path: /admin/logout
+                target: /admin/login
 
     access_control:
-        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, role: ROLE_ADMIN }
+        - { path: ^/admin/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, role: ROLE_ADMIN }
+        - { path: ^/cabinet, role: [ROLE_SELLER, ROLE_BUYER] }
