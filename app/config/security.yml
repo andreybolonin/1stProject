@@ -1,0 +1,33 @@
+security:
+
+    providers:
+        my_db_provider:
+            entity:
+                class: AppBundle:User
+                property: username
+
+
+    encoders:
+        AppBundle\Entity\User: bcrypt
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            anonymous: ~
+            provider: my_db_provider
+            simple_form:
+                login_path: /login
+                check_path: /login_check
+                authenticator: AppBundle\Security\PasswordAuthenticator
+            logout:
+                path: /logout
+                target: /login
+
+    access_control:
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, role: ROLE_ADMIN }
